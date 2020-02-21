@@ -33,13 +33,22 @@ private:
 	glm::mat4 changes;
 	glm::mat4 world;
 	Cube2 head;
+	Cube2 scarf;
+	Cube2 scarf2;
+	Cube2 mask;
 	Cube2 eyeL;
 	Cube2 eyeR;
 	Cube2 nose;
+	Cube2 shoe1;
+	Cube2 shoe2;
 	Cube2 hat;
+	Cube2 hat2;
 	Cube2 footR;
 	Cube2 footL;
 	Cube2 chest;
+	Cube2 button1;
+	Cube2 button2;
+	Cube2 button3;
 };
 
 #endif

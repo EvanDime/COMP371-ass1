@@ -1,7 +1,0 @@
-﻿  Source.cpp
-C:\WorkSpace\comp371assigment1\VS2017\Source.cpp(163,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\WorkSpace\comp371assigment1\VS2017\Source.cpp(191,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\WorkSpace\comp371assigment1\VS2017\Source.cpp(340,6): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
-C:\WorkSpace\comp371assigment1\VS2017\Source.cpp(349,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\WorkSpace\comp371assigment1\VS2017\Source.cpp(350,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Labs.vcxproj -> C:\WorkSpace\comp371assigment1\VS2017\/../Bin/Labs-Debug.exe

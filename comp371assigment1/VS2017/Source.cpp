@@ -141,7 +141,6 @@ int main(int argc, char* argv[])
 	}
 	glfwMakeContextCurrent(window);
 
-
 	// Initialize GLEW
 	glewExperimental = true; // Needed for core profile
 	if (glewInit() != GLEW_OK) {
@@ -181,8 +180,13 @@ int main(int argc, char* argv[])
 	Cube2 axisZ = Cube2(vec3(0.0f, 0.0f, 1.0f), translate(mat4(1.0f), vec3(0.0f, 2.5f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f, 5.0f, 0.1f)), shaderProgram);
 	Grid grid = Grid(vec3(1.0f, 1.0f, 0.0f), shaderProgram);
 	Olaf olaf = Olaf(shaderProgram);
+	Olaf olaf2 = Olaf(shaderProgram);
+	olaf2.Translate(vec3(6.0f, 0.0f, 0.0f));
 
-// Entering Main Loop
+	//Other
+	glEnable(GL_CULL_FACE);
+
+	// Entering Main Loop
 	while (!glfwWindowShouldClose(window))
 	{
 
@@ -200,6 +204,7 @@ int main(int argc, char* argv[])
 		axisZ.Draw();
 		grid.Draw();
 		olaf.Draw();
+		olaf2.Draw();
 		
 		//////
 
