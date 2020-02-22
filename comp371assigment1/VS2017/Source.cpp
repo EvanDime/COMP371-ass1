@@ -1,5 +1,7 @@
 #include <iostream>
 #include <list>
+#include <string>
+#include <fstream>
 
 #define GLEW_STATIC 1   // This allows linking with Static Library on Windows, without DLL
 #include <GL/glew.h>    // Include GLEW - OpenGL Extension Wrangler
@@ -19,43 +21,66 @@
 
 
 
-
 using namespace glm;
 using namespace std;
 
-void cameraThings();
-const char* getVertexShaderSource()
-{
-	// For now, you use a string for your shader code, in the assignment, shaders will be stored in .glsl files
-	return
-		"#version 330 core\n"
-		"layout (location = 0) in vec3 aPos;"
-		"layout (location = 1) in vec3 aColor;"
-		""
-		"uniform mat4 worldMatrix;"
-		"uniform mat4 viewMatrix = mat4(1.0);"  // default value for view matrix (identity)
-		"uniform mat4 projectionMatrix = mat4(1.0);"
-		""
-		"out vec3 vertexColor;"
-		"void main()"
-		"{"
-		"   vertexColor = aColor;"
-		"   mat4 modelViewProjection = projectionMatrix * viewMatrix * worldMatrix;"
-		"   gl_Position = modelViewProjection * vec4(aPos.x, aPos.y, aPos.z, 1.0);"
-		"}";
+
+//Reads a file
+std::string readFile(const char* filePath) {
+	std::string content;
+	std::ifstream fileStream(filePath, std::ios::in);
+
+	if (!fileStream.is_open()) {
+		std::cerr << "Could not read file " << filePath << ". File does not exist." << std::endl;
+		return "";
+	}
+
+	std::string line = "";
+	while (!fileStream.eof()) {
+		std::getline(fileStream, line);
+		content.append(line + "\n");
+	}
+
+	fileStream.close();
+	return content;
 }
 
 
-const char* getFragmentShaderSource()
+std::string getVertexShaderSource()
 {
-	return
-		"#version 330 core\n"
-		"in vec3 vertexColor;"
-		"out vec4 FragColor;"
-		"void main()"
-		"{"
-		"   FragColor = vec4(vertexColor.r, vertexColor.g, vertexColor.b, 1.0f);"
-		"}";
+	// For now, you use a string for your shader code, in the assignment, shaders will be stored in .glsl files
+	//return
+	//	"#version 330 core\n"
+	//	"layout (location = 0) in vec3 aPos;"
+	//	"layout (location = 1) in vec3 aColor;"
+	//	""
+	//	"uniform mat4 worldMatrix;"
+	//	"uniform mat4 viewMatrix = mat4(1.0);"  // default value for view matrix (identity)
+	//	"uniform mat4 projectionMatrix = mat4(1.0);"
+	//	""
+	//	"out vec3 vertexColor;"
+	//	"void main()"
+	//	"{"
+	//	"   vertexColor = aColor;"
+	//	"   mat4 modelViewProjection = projectionMatrix * viewMatrix * worldMatrix;"
+	//	"   gl_Position = modelViewProjection * vec4(aPos.x, aPos.y, aPos.z, 1.0);"
+	//	"}";
+
+	return readFile("vertex.glsl");
+}
+
+
+std::string getFragmentShaderSource()
+{
+	//return
+	//	"#version 330 core\n"
+	//	"in vec3 vertexColor;"
+	//	"out vec4 FragColor;"
+	//	"void main()"
+	//	"{"
+	//	"   FragColor = vec4(vertexColor.r, vertexColor.g, vertexColor.b, 1.0f);"
+	//	"}";
+	return readFile("fragment.glsl");
 }
 
 
@@ -65,10 +90,10 @@ int compileAndLinkShaders()
 	// return shader program id
 	// ------------------------------------
 
-
 	// vertex shader
 	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	const char* vertexShaderSource = getVertexShaderSource();
+	std::string vertShaderStr = getVertexShaderSource();
+	const char* vertexShaderSource = vertShaderStr.c_str();
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
 
@@ -84,7 +109,8 @@ int compileAndLinkShaders()
 
 	// fragment shader
 	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	const char* fragmentShaderSource = getFragmentShaderSource();
+	std::string fragShaderStr = getFragmentShaderSource();
+	const char* fragmentShaderSource = fragShaderStr.c_str();
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
 
@@ -149,13 +175,14 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	// Black background
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	// putple-ish background
+	glClearColor(0.1f, 0.0f, 0.2f, 1.0f);
+
 	// Compile and link shaders here ...
 	int shaderProgram = compileAndLinkShaders();
 	glUseProgram(shaderProgram);
 
-	///////////////camera
+	///////////////camera setup
 
 	Camera camera = Camera(shaderProgram);
 	// For frame time
@@ -180,8 +207,6 @@ int main(int argc, char* argv[])
 	Cube2 axisZ = Cube2(vec3(0.0f, 0.0f, 1.0f), translate(mat4(1.0f), vec3(0.0f, 2.5f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f, 5.0f, 0.1f)), shaderProgram);
 	Grid grid = Grid(vec3(1.0f, 1.0f, 0.0f), shaderProgram);
 	Olaf olaf = Olaf(shaderProgram);
-	Olaf olaf2 = Olaf(shaderProgram);
-	olaf2.Translate(vec3(6.0f, 0.0f, 0.0f));
 
 	//Other
 	glEnable(GL_CULL_FACE);
@@ -199,12 +224,12 @@ int main(int argc, char* argv[])
 		// Each frame, reset color of each pixel to glClearColor
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		//Draw the main objects
 		axisX.Draw();
 		axisY.Draw();
 		axisZ.Draw();
 		grid.Draw();
 		olaf.Draw();
-		olaf2.Draw();
 		
 		//////
 
@@ -266,6 +291,7 @@ int main(int argc, char* argv[])
 		}
 
 		//SPACE
+		//I know the function can be called relocate or something, but i decided on Nuke
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !shift)
 		{
 			olaf.Nuke();
@@ -316,8 +342,8 @@ int main(int argc, char* argv[])
 			axisY.UpdateWorld(rotate(mat4(1.0f), radians(-0.01f), vec3(1.0f, 0.0f, 0.0f)));
 			axisZ.UpdateWorld(rotate(mat4(1.0f), radians(-0.01f), vec3(1.0f, 0.0f, 0.0f)));
 		}
-		//SHIFT + backspace
-		if (glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS && shift)
+		//SHIFT + backspace , my laptop does not have a home button so i used shift backspace)
+		if ((glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS && shift) || (glfwGetKey(window, GLFW_KEY_HOME) == GLFW_PRESS))
 		{
 			cameraHorizontalAngle = 90.0f;
 			cameraVerticalAngle = 0.0f;
@@ -327,6 +353,7 @@ int main(int argc, char* argv[])
 			camera.cameraPosition = cameraPosition1;
 			camera.cameraLookAt = cameraLookAt1;
 			camera.cameraUp = cameraUp1;
+			//reset the changes done to the world (world here mean everything but the camera)
 			olaf.ResetWorld();
 			grid.ResetWorld();
 			axisX.ResetWorld();
@@ -334,6 +361,7 @@ int main(int argc, char* argv[])
 			axisZ.ResetWorld();
 		}
 
+		//Get states for the mouse click events
 		lastMouseLeftState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 		lastMouseRightState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
 		lastMouseMiddleState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE);
@@ -360,14 +388,17 @@ int main(int argc, char* argv[])
 			float phi = radians(cameraVerticalAngle);
 			vec3 cameraSideVector = glm::cross(camera.cameraLookAt, vec3(0.0f, 1.0f, 0.0f));
 
+			//See if we need to zoom in/out
 			if (lastMouseLeftState == GLFW_PRESS) {
 				camera.cameraPosition -= camera.cameraLookAt * dy * 0.1f;
 			}
 
+			//see if we need to pan left/right
 			if (lastMouseRightState == GLFW_PRESS) {
 				camera.cameraPosition += cameraSideVector * dx * 0.1f;
 			}
 
+			//see if we need to rotate the camera
 			if (lastMouseMiddleState == GLFW_PRESS) {
 				// Convert to spherical coordinates
 				const float cameraAngularSpeed = 60.0f;
@@ -394,7 +425,8 @@ int main(int argc, char* argv[])
 		glm::normalize(cameraSideVector);
 		///update camera
 		camera.Update();
-		////
+		
+
 		// End frame
 		glfwSwapBuffers(window);
 
