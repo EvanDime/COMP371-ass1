@@ -39,7 +39,7 @@ hold left click to zoom in and out depending on the direction the camera is faci
 
 hold right click to pan the camera left and right, moving along it's x axis.
 
-hold the center mouse button to change the pitch and yaw of the camera. (added yaw for more control) 
+hold the center mouse button to change the pitch and yaw of the camera. (added yaw for extra control) 
 
 //Extra parts to olaf
 Olaf has: 
