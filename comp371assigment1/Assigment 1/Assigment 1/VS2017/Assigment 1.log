@@ -1,0 +1,8 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(452,5): warning MSB8028: The intermediate directory (C:\WorkSpace\COMP371-ass1\comp371assigment1\VS2017\/../Build/Debug/) contains files shared from another project (Labs.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Source.cpp
+C:\WorkSpace\COMP371-ass1\comp371assigment1\VS2017\Source.cpp(189,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\WorkSpace\COMP371-ass1\comp371assigment1\VS2017\Source.cpp(220,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\WorkSpace\COMP371-ass1\comp371assigment1\VS2017\Source.cpp(373,6): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
+C:\WorkSpace\COMP371-ass1\comp371assigment1\VS2017\Source.cpp(382,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\WorkSpace\COMP371-ass1\comp371assigment1\VS2017\Source.cpp(383,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Assigment 1.vcxproj -> C:\WorkSpace\COMP371-ass1\comp371assigment1\VS2017\/../Bin/Assigment 1-Debug.exe

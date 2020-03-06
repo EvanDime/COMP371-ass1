@@ -203,8 +203,8 @@ int main(int argc, char* argv[])
 
 	// Define and upload geometry to the GPU here ...
 	Cube2 axisX = Cube2(vec3(1.0f, 0.0f, 0.0f), translate(mat4(1.0f), vec3(2.5f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(5.0f, 0.1f, 0.1f)), shaderProgram);
-	Cube2 axisY = Cube2(vec3(0.0f, 1.0f, 0.0f), translate(mat4(1.0f), vec3(0.0f, 0.0f, 2.5f)) * scale(mat4(1.0f), vec3(0.1f, 0.03f, 5.0f)), shaderProgram);
-	Cube2 axisZ = Cube2(vec3(0.0f, 0.0f, 1.0f), translate(mat4(1.0f), vec3(0.0f, 2.5f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f, 5.0f, 0.1f)), shaderProgram);
+	Cube2 axisZ = Cube2(vec3(0.0f, 1.0f, 0.0f), translate(mat4(1.0f), vec3(0.0f, 0.0f, 2.5f)) * scale(mat4(1.0f), vec3(0.1f, 0.1f, 5.0f)), shaderProgram);
+	Cube2 axisY = Cube2(vec3(0.0f, 0.0f, 1.0f), translate(mat4(1.0f), vec3(0.0f, 2.5f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f, 5.0f, 0.1f)), shaderProgram);
 	Grid grid = Grid(vec3(1.0f, 1.0f, 0.0f), shaderProgram);
 	Olaf olaf = Olaf(shaderProgram);
 
