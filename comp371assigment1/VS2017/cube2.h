@@ -31,11 +31,20 @@ public:
 	void Scale(glm::vec3);
 	void ScaleParent(glm::vec3);
 	GLuint  cubeVAO;
+	struct Vertex
+	{
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec3 color;
+		glm::vec2 uv;
+
+	};
 protected:
 	GLuint mWorldMatrixLocation;
 	glm::mat4 changes;
 	glm::mat4 centerSource;
 	glm::mat4 originalBuild;
 	glm::mat4 world;
+	unsigned int numOfVertices;
 };
 #endif

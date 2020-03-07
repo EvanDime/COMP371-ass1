@@ -21,7 +21,13 @@ public:
 protected:
 	glm::vec3 gColor;
 	glm::vec3* vertices;
-
+	struct Vertex
+	{
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec3 color;
+		glm::vec2 uv;
+	};
 };
 
 #endif

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <list>
 #include "cube2.h"
+#include "sphere.h"
 
 #define GLEW_STATIC 1   // This allows linking with Static Library on Windows, without DLL
 #include <GL/glew.h>    // Include GLEW - OpenGL Extension Wrangler
@@ -32,7 +33,7 @@ private:
 	GLuint mWorldMatrixLocation;
 	glm::mat4 changes;
 	glm::mat4 world;
-	Cube2 head;
+	Sphere head;
 	Cube2 scarf;
 	Cube2 scarf2;
 	Cube2 mask;
@@ -45,10 +46,18 @@ private:
 	Cube2 hat2;
 	Cube2 footR;
 	Cube2 footL;
-	Cube2 chest;
+	Sphere chest;
 	Cube2 button1;
 	Cube2 button2;
 	Cube2 button3;
+	unsigned int numOfVertices;
+
+	struct Vertex
+	{
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec3 color;
+	};
 };
 
 #endif

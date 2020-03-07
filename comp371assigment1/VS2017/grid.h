@@ -28,6 +28,12 @@ private:
 	int mWorldMatrixLocation;
 	glm::mat4 changes;
 	glm::mat4 world;
+	struct Vertex
+	{
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec3 color;
+	};
 };
 
 #endif

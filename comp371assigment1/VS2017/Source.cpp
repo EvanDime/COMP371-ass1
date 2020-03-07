@@ -46,41 +46,14 @@ std::string readFile(const char* filePath) {
 }
 
 
-std::string getVertexShaderSource()
-{
-	// For now, you use a string for your shader code, in the assignment, shaders will be stored in .glsl files
-	//return
-	//	"#version 330 core\n"
-	//	"layout (location = 0) in vec3 aPos;"
-	//	"layout (location = 1) in vec3 aColor;"
-	//	""
-	//	"uniform mat4 worldMatrix;"
-	//	"uniform mat4 viewMatrix = mat4(1.0);"  // default value for view matrix (identity)
-	//	"uniform mat4 projectionMatrix = mat4(1.0);"
-	//	""
-	//	"out vec3 vertexColor;"
-	//	"void main()"
-	//	"{"
-	//	"   vertexColor = aColor;"
-	//	"   mat4 modelViewProjection = projectionMatrix * viewMatrix * worldMatrix;"
-	//	"   gl_Position = modelViewProjection * vec4(aPos.x, aPos.y, aPos.z, 1.0);"
-	//	"}";
-
-	return readFile("vertex.glsl");
+std::string getVertexShaderSource(char *source)
+{	return readFile(source);
 }
 
 
-std::string getFragmentShaderSource()
+std::string getFragmentShaderSource(char* source)
 {
-	//return
-	//	"#version 330 core\n"
-	//	"in vec3 vertexColor;"
-	//	"out vec4 FragColor;"
-	//	"void main()"
-	//	"{"
-	//	"   FragColor = vec4(vertexColor.r, vertexColor.g, vertexColor.b, 1.0f);"
-	//	"}";
-	return readFile("fragment.glsl");
+	return readFile(source);
 }
 
 
@@ -92,7 +65,7 @@ int compileAndLinkShaders()
 
 	// vertex shader
 	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	std::string vertShaderStr = getVertexShaderSource();
+	std::string vertShaderStr = getVertexShaderSource("vertex.glsl");
 	const char* vertexShaderSource = vertShaderStr.c_str();
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
@@ -109,7 +82,64 @@ int compileAndLinkShaders()
 
 	// fragment shader
 	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	std::string fragShaderStr = getFragmentShaderSource();
+	std::string fragShaderStr = getFragmentShaderSource("fragment.glsl");
+	const char* fragmentShaderSource = fragShaderStr.c_str();
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+
+	// check for shader compile errors
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	// link shaders
+	int shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	// check for linking errors
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+	}
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	return shaderProgram;
+}
+
+int compileAndLinkShaders2()
+{
+	// compile and link shader program
+	// return shader program id
+	// ------------------------------------
+
+	// vertex shader
+	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	std::string vertShaderStr = getVertexShaderSource("sphereVertex.glsl");
+	const char* vertexShaderSource = vertShaderStr.c_str();
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+
+	// check for shader compile errors
+	int success;
+	char infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	// fragment shader
+	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	std::string fragShaderStr = getFragmentShaderSource("sphereFragment.glsl");
 	const char* fragmentShaderSource = fragShaderStr.c_str();
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
@@ -180,11 +210,12 @@ int main(int argc, char* argv[])
 
 	// Compile and link shaders here ...
 	int shaderProgram = compileAndLinkShaders();
+	int shaderProgram2 = compileAndLinkShaders2();
 	glUseProgram(shaderProgram);
 
 	///////////////camera setup
 
-	Camera camera = Camera(shaderProgram);
+	Camera camera = Camera(shaderProgram2);
 	// For frame time
 	float lastFrameTime = glfwGetTime();
 	int lastMouseLeftState = GLFW_RELEASE;
@@ -207,10 +238,9 @@ int main(int argc, char* argv[])
 	Cube2 axisY = Cube2(vec3(0.0f, 0.0f, 1.0f), translate(mat4(1.0f), vec3(0.0f, 2.5f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f, 5.0f, 0.1f)), shaderProgram);
 	Grid grid = Grid(vec3(1.0f, 1.0f, 0.0f), shaderProgram);
 	Olaf olaf = Olaf(shaderProgram);
-
 	//Other
 	glEnable(GL_CULL_FACE);
-
+	glCullFace(GL_FRONT);
 	// Entering Main Loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -230,7 +260,6 @@ int main(int argc, char* argv[])
 		axisZ.Draw();
 		grid.Draw();
 		olaf.Draw();
-		
 		//////
 
 		///key input

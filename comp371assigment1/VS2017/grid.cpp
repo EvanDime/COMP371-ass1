@@ -15,86 +15,96 @@ Grid::Grid(vec3 color, int shaderProgram)
 	glBindVertexArray(gridVAO);
 
 	float temp = sizeof(cube);
-	vec3 vertexArray[] = {  // position,                            color
-	vec3(-0.5f,-0.5f,-0.5f), color, //left - red
-	vec3(-0.5f,-0.5f, 0.5f), color,
-	vec3(-0.5f, 0.5f, 0.5f), color,
 
-	vec3(-0.5f,-0.5f,-0.5f), color,
-	vec3(-0.5f, 0.5f, 0.5f), color,
-	vec3(-0.5f, 0.5f,-0.5f), color,
+	Vertex vertexArray[] = {  // position,                            color
+		{vec3(-0.5f,-0.5f,-0.5f),vec3(-0.5f,-0.5f,-0.5f), color}, //left - red
+		{	vec3(-0.5f,-0.5f, 0.5f), vec3(-0.5f,-0.5f, 0.5f), color},
+		{	vec3(-0.5f, 0.5f, 0.5f), vec3(-0.5f, 0.5f, 0.5f), color},
 
-	vec3(0.5f, 0.5f,-0.5f), color, // far - blue
-	vec3(-0.5f,-0.5f,-0.5f), color,
-	vec3(-0.5f, 0.5f,-0.5f), color,
+		{	vec3(-0.5f,-0.5f,-0.5f),  vec3(-0.5f,-0.5f,-0.5f), color},
+		{	vec3(-0.5f, 0.5f, 0.5f),  vec3(-0.5f, 0.5f, 0.5f), color},
+		{	vec3(-0.5f, 0.5f,-0.5f),  vec3(-0.5f, 0.5f,-0.5f), color},
 
-	vec3(0.5f, 0.5f,-0.5f), color,
-	vec3(0.5f,-0.5f,-0.5f), color,
-	vec3(-0.5f,-0.5f,-0.5f),color,
+		{	vec3(0.5f, 0.5f,-0.5f),  vec3(0.5f, 0.5f,-0.5f), color}, // far - blue
+		{	vec3(-0.5f,-0.5f,-0.5f),  vec3(-0.5f,-0.5f,-0.5f), color},
+		{	vec3(-0.5f, 0.5f,-0.5f), vec3(-0.5f, 0.5f,-0.5f), color},
 
-	vec3(0.5f,-0.5f, 0.5f), color, // bottom - turquoise
-	vec3(-0.5f,-0.5f,-0.5f), color,
-	vec3(0.5f,-0.5f,-0.5f),color,
+		{	vec3(0.5f, 0.5f,-0.5f),  vec3(0.5f, 0.5f,-0.5f), color},
+		{	vec3(0.5f,-0.5f,-0.5f),  vec3(0.5f,-0.5f,-0.5f), color},
+		{	vec3(-0.5f,-0.5f,-0.5f), vec3(-0.5f,-0.5f,-0.5f), color},
 
-	vec3(0.5f,-0.5f, 0.5f), color,
-	vec3(-0.5f,-0.5f, 0.5f), color,
-	vec3(-0.5f,-0.5f,-0.5f), color,
+		{	vec3(0.5f,-0.5f, 0.5f),  vec3(0.5f,-0.5f, 0.5f), color}, // bottom - turquoise
+		{	vec3(-0.5f,-0.5f,-0.5f), vec3(-0.5f,-0.5f,-0.5f), color},
+		{	vec3(0.5f,-0.5f,-0.5f),vec3(0.5f,-0.5f,-0.5f), color},
 
-	vec3(-0.5f, 0.5f, 0.5f), color, // near - green
-	vec3(-0.5f,-0.5f, 0.5f), color,
-	vec3(0.5f,-0.5f, 0.5f), color,
+		{	vec3(0.5f,-0.5f, 0.5f), vec3(0.5f,-0.5f, 0.5f), color},
+		{	vec3(-0.5f,-0.5f, 0.5f), vec3(-0.5f,-0.5f, 0.5f), color},
+		{	vec3(-0.5f,-0.5f,-0.5f),vec3(-0.5f,-0.5f,-0.5f), color},
 
-	vec3(0.5f, 0.5f, 0.5f), color,
-	vec3(-0.5f, 0.5f, 0.5f), color,
-	vec3(0.5f,-0.5f, 0.5f), color,
+		{	vec3(-0.5f, 0.5f, 0.5f), vec3(-0.5f, 0.5f, 0.5f), color}, // near - green
+		{	vec3(-0.5f,-0.5f, 0.5f), vec3(-0.5f,-0.5f, 0.5f), color},
+		{	vec3(0.5f,-0.5f, 0.5f), vec3(0.5f,-0.5f, 0.5f), color},
 
-	vec3(0.5f, 0.5f, 0.5f), color, // right - purple
-	vec3(0.5f,-0.5f,-0.5f),color,
-	vec3(0.5f, 0.5f,-0.5f), color,
+		{	vec3(0.5f, 0.5f, 0.5f), vec3(0.5f, 0.5f, 0.5f), color},
+		{	vec3(-0.5f, 0.5f, 0.5f), vec3(-0.5f, 0.5f, 0.5f), color},
+		{	vec3(0.5f,-0.5f, 0.5f), vec3(0.5f,-0.5f, 0.5f), color},
 
-	vec3(0.5f,-0.5f,-0.5f), color,
-	vec3(0.5f, 0.5f, 0.5f), color,
-	vec3(0.5f,-0.5f, 0.5f), color,
+		{	vec3(0.5f, 0.5f, 0.5f), vec3(0.5f, 0.5f, 0.5f), color}, // right - purple
+		{	vec3(0.5f,-0.5f,-0.5f), vec3(0.5f,-0.5f,-0.5f), color},
+		{	vec3(0.5f, 0.5f,-0.5f), vec3(0.5f, 0.5f,-0.5f), color},
 
-	vec3(0.5f, 0.5f, 0.5f),color, // top - yellow
-	vec3(0.5f, 0.5f,-0.5f), color,
-	vec3(-0.5f, 0.5f,-0.5f),color,
+		{	vec3(0.5f,-0.5f,-0.5f), vec3(0.5f,-0.5f,-0.5f), color},
+		{	vec3(0.5f, 0.5f, 0.5f), vec3(0.5f, 0.5f, 0.5f), color},
+		{	vec3(0.5f,-0.5f, 0.5f), vec3(0.5f,-0.5f, 0.5f), color},
 
-	vec3(0.5f, 0.5f, 0.5f), color,
-	vec3(-0.5f, 0.5f,-0.5f), color,
-	vec3(-0.5f, 0.5f, 0.5f), color
+		{	vec3(0.5f, 0.5f, 0.5f), vec3(0.5f, 0.5f, 0.5f), color}, // top - yellow
+		{	vec3(0.5f, 0.5f,-0.5f), vec3(0.5f, 0.5f,-0.5f), color},
+		{	vec3(-0.5f, 0.5f,-0.5f),vec3(-0.5f, 0.5f,-0.5f), color},
+
+		{	vec3(0.5f, 0.5f, 0.5f), vec3(0.5f, 0.5f, 0.5f), color},
+		{	vec3(-0.5f, 0.5f,-0.5f), vec3(-0.5f, 0.5f,-0.5f), color},
+		{	vec3(-0.5f, 0.5f, 0.5f), vec3(-0.5f, 0.5f, 0.5f), color}
 	};
-	temp = sizeof(vertexArray);
-	GLuint vertexBufferObject;
-	glGenBuffers(1, &vertexBufferObject);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-	glBufferData(GL_ARRAY_BUFFER, 
-		sizeof(vertexArray),
-		&vertexArray,
-		GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0,                   // attribute 0 matches aPos in Vertex Shader
-		3,                   // size
-		GL_FLOAT,            // type
-		GL_FALSE,            // normalized?
-		2 * sizeof(vec3), // stride - each vertex contain 2 vec3 (position, color)
-		(void*)0             // array buffer offset
+	glGenVertexArrays(1, &gridVAO);
+	glBindVertexArray(gridVAO);
+	GLuint mVBO;
+
+	glGenBuffers(1, &mVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexArray), vertexArray, GL_STATIC_DRAW);
+
+	// 1st attribute buffer : vertex Positions
+	glVertexAttribPointer(0,              // attribute. No particular reason for 0, but must match the layout in the shader.
+		3,              // size
+		GL_FLOAT,       // type
+		GL_FALSE,       // normalized?
+		sizeof(Vertex), // stride
+		(void*)0        // array buffer offset
 	);
 	glEnableVertexAttribArray(0);
 
-
-	glVertexAttribPointer(1,                            // attribute 1 matches aColor in Vertex Shader
+	// 3rd attribute buffer : vertex color
+	glVertexAttribPointer(2,
 		3,
 		GL_FLOAT,
 		GL_FALSE,
-		2 * sizeof(vec3),
-		(void*)sizeof(vec3)      // color is offseted a vec3 (comes after position)
+		sizeof(Vertex),
+		(void*)(2 * sizeof(vec3))   // Normal is Offseted by vec3 (see class Vertex)
 	);
 	glEnableVertexAttribArray(1);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 
-	glBindVertexArray(0);
+	//2nd attribute buffer : vertex normal
+	glVertexAttribPointer(1,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(Vertex),
+		(void*)sizeof(vec3)// Color is Offseted by 2 vec3 (see class Vertex)
+	);
+	glEnableVertexAttribArray(2);
+
 }
 
 void Grid::Draw()

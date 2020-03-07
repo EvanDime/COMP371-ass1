@@ -112,6 +112,8 @@
     <None Include="..\Assets\Shaders\Texture.fragmentshader" />
     <None Include="..\Assets\Shaders\Texture.vertexshader" />
     <None Include="fragment.glsl" />
+    <None Include="sphereFragment.glsl" />
+    <None Include="sphereVertex.glsl" />
     <None Include="vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +127,8 @@
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="olaf.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="sphere.cpp" />
+    <ClCompile Include="SphereModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
@@ -132,6 +136,8 @@
     <ClInclude Include="cube2.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="olaf.h" />
+    <ClInclude Include="sphere.h" />
+    <ClInclude Include="SphereModel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
