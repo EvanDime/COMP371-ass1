@@ -76,6 +76,9 @@
     <Image Include="..\Assets\Textures\Particle.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+    <Image Include="..\Assets\snow.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -124,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="SphereModel.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

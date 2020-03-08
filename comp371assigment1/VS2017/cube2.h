@@ -16,9 +16,8 @@
 class Cube2 
 {
 public:
-	Cube2(glm::vec3, glm::mat4, int);
-	Cube2(glm::vec3, glm::mat4,glm::mat4, int);
-	void Draw();
+	Cube2(glm::vec3, glm::mat4, int , GLuint = NULL, int = 0);
+	void Draw(GLuint = NULL);
 	void Update(glm::mat4);
 	void UpdateParent(glm::mat4);
 	void UpdateWorld(glm::mat4);
@@ -31,6 +30,7 @@ public:
 	void Scale(glm::vec3);
 	void ScaleParent(glm::vec3);
 	GLuint  cubeVAO;
+	void Animate(float, bool = false);
 	struct Vertex
 	{
 		glm::vec3 position;
@@ -41,9 +41,14 @@ public:
 	};
 protected:
 	GLuint mWorldMatrixLocation;
+	GLuint textureLocation = NULL;
 	glm::mat4 changes;
 	glm::mat4 centerSource;
 	glm::mat4 originalBuild;
+	glm::mat4 animationMatrix;
+	bool animDirection = true;
+	float frame;
+	int animateType;
 	glm::mat4 world;
 	unsigned int numOfVertices;
 };

@@ -4,62 +4,67 @@
 using namespace glm;
 using namespace std;
 
-Cube2::Cube2(glm::vec3 color, glm::mat4 change, int shaderProgram) 
+Cube2::Cube2(glm::vec3 color, glm::mat4 change, int shaderProgram, GLuint texture, int anim) 
 	{
 	originalBuild = change;
 	changes = change;
 	mWorldMatrixLocation = glGetUniformLocation(shaderProgram, "worldMatrix");
 	centerSource = mat4(1.0f);
 	world = mat4(1.0f);
-
+	animationMatrix = mat4(1.0f);
+	animateType = anim;
+	frame = 0;
+	if (texture != NULL) {
+		textureLocation = glGetUniformLocation(shaderProgram, "textureSampler");
+	}
 	Vertex vertexArray[] = {  // position,                            color
-		{   vec3(-0.5f,-0.5f,-0.5f),  vec3(-1.0f, 0.0f,0.0f),	color,vec2(0.0f, 0.0f)}, //left - red
-		{	vec3(-0.5f,-0.5f, 0.5f),  vec3(-1.0f, 0.0f,0.0f),	color,vec2(0.0f, 1.0f)},
-		{	vec3(-0.5f, 0.5f, 0.5f),  vec3(-1.0f, 0.0f,0.0f),	color,vec2(1.0f, 1.0f)},
+		{   vec3(-0.5f,-0.5f,-0.5f),	vec3(1.0f, 0.0f, 0.0f),		color,	vec2(0.0f, 0.0f)}, //left - red
+		{	vec3(-0.5f,-0.5f, 0.5f),	vec3(1.0f, 0.0f, 0.0f),		color,	vec2(0.0f, 1.0f)},
+		{	vec3(-0.5f, 0.5f, 0.5f),	vec3(1.0f, 0.0f, 0.0f),		color,	vec2(1.0f, 1.0f)},
 
-		{	vec3(-0.5f,-0.5f,-0.5f),  vec3(-1.0f, 0.0f,0.0f),	color,vec2(0.0f, 0.0f)},
-		{	vec3(-0.5f, 0.5f, 0.5f),  vec3(-1.0f, 0.0f,0.0f),	color,vec2(1.0f, 1.0f)},
-		{	vec3(-0.5f, 0.5f,-0.5f),  vec3(-1.0f, 0.0f,0.0f),	color,vec2(1.0f, 0.0f)},
+		{	vec3(-0.5f,-0.5f,-0.5f),	vec3(1.0f, 0.0f, 0.0f),		color,	vec2(0.0f, 0.0f)},
+		{	vec3(-0.5f, 0.5f, 0.5f),	vec3(1.0f, 0.0f, 0.0f),		color,	vec2(1.0f, 1.0f)},
+		{	vec3(-0.5f, 0.5f,-0.5f),	vec3(1.0f, 0.0f, 0.0f),		color,	vec2(1.0f, 0.0f)},
 
-		{	vec3(0.5f, 0.5f,-0.5f),   vec3(0.0f, 0.0f,-1.0f),	color,vec2(1.0f, 1.0f)}, // far - blue
-		{	vec3(-0.5f,-0.5f,-0.5f),  vec3(0.0f, 0.0f,-1.0f),	color,vec2(0.0f, 0.0f)},
-		{	vec3(-0.5f, 0.5f,-0.5f),  vec3(0.0f, 0.0f,-1.0f),	color,vec2(0.0f, 1.0f)},
+		{	vec3(0.5f, 0.5f,-0.5f),		vec3(0.0f, 0.0f, 1.0f),		color,	vec2(1.0f, 1.0f)}, // far - blue
+		{	vec3(-0.5f,-0.5f,-0.5f),	vec3(0.0f, 0.0f, 1.0f),		color,	vec2(0.0f, 0.0f)},
+		{	vec3(-0.5f, 0.5f,-0.5f),	vec3(0.0f, 0.0f, 1.0f),		color,	vec2(0.0f, 1.0f)},
 
-		{	vec3(0.5f, 0.5f,-0.5f),  vec3(0.0f, 0.0f,-1.0f),	color,vec2(1.0f, 1.0f)},
-		{	vec3(0.5f,-0.5f,-0.5f),  vec3(0.0f, 0.0f,-1.0f),	color,vec2(1.0f, 0.0f)},
-		{	vec3(-0.5f,-0.5f,-0.5f), vec3(0.0f, 0.0f,-1.0f),	color,vec2(0.0f, 0.0f)},
+		{	vec3(0.5f, 0.5f,-0.5f),		vec3(0.0f, 0.0f, 1.0f),		color,	vec2(1.0f, 1.0f)},
+		{	vec3(0.5f,-0.5f,-0.5f),		vec3(0.0f, 0.0f, 1.0f),		color,	vec2(1.0f, 0.0f)},
+		{	vec3(-0.5f,-0.5f,-0.5f),	vec3(0.0f, 0.0f, 1.0f),		color,	vec2(0.0f, 0.0f)},
 
-		{	vec3(0.5f,-0.5f, 0.5f),  vec3(0.0f, -1.0f, 0.0f),	color,vec2(1.0f, 1.0f)}, // bottom - turquoise
-		{	vec3(-0.5f,-0.5f,-0.5f), vec3(0.0f, -1.0f, 0.0f),	color,vec2(0.0f, 0.0f)},
-		{	vec3(0.5f,-0.5f,-0.5f),  vec3(0.0f, -1.0f, 0.0f),	color,vec2(1.0f, 0.0f)},
+		{	vec3(0.5f,-0.5f, 0.5f),		vec3(0.0f, 1.0f, 1.0f),		color,	vec2(1.0f, 1.0f)}, // bottom - turquoise
+		{	vec3(-0.5f,-0.5f,-0.5f),	vec3(0.0f, 1.0f, 1.0f),		color,	vec2(0.0f, 0.0f)},
+		{	vec3(0.5f,-0.5f,-0.5f),		vec3(0.0f, 1.0f, 1.0f),		color,	vec2(1.0f, 0.0f)},
 
-		{	vec3(0.5f,-0.5f, 0.5f),  vec3(0.0f, -1.0f, 0.0f),	color,vec2(1.0f, 1.0f)},
-		{	vec3(-0.5f,-0.5f, 0.5f), vec3(0.0f, -1.0f, 0.0f),	color,vec2(0.0f, 1.0f)},
-		{	vec3(-0.5f,-0.5f,-0.5f), vec3(0.0f, -1.0f, 0.0f),	color,vec2(0.0f, 0.0f)},
+		{	vec3(0.5f,-0.5f, 0.5f),		vec3(0.0f, 1.0f, 1.0f),		color,	vec2(1.0f, 1.0f)},
+		{	vec3(-0.5f,-0.5f, 0.5f),	vec3(0.0f, 1.0f, 1.0f),		color,	vec2(0.0f, 1.0f)},
+		{	vec3(-0.5f,-0.5f,-0.5f),	vec3(0.0f, 1.0f, 1.0f),		color,	vec2(0.0f, 0.0f)},
 
-		{	vec3(-0.5f, 0.5f, 0.5f), vec3(-0.5f, 0.5f, 0.5f),	color,vec2(0.0f, 1.0f)}, // near - green
-		{	vec3(-0.5f,-0.5f, 0.5f), vec3(-0.5f,-0.5f, 0.5f),	color,vec2(0.0f, 0.0f)},
-		{	vec3(0.5f,-0.5f, 0.5f),  vec3(0.5f,-0.5f, 0.5f),	color,vec2(1.0f, 0.0f)},
+		{	vec3(-0.5f, 0.5f, 0.5f),	vec3(0.0f, 1.0f, 0.0f),		color,	vec2(0.0f, 1.0f)}, // near - green
+		{	vec3(-0.5f,-0.5f, 0.5f),	vec3(0.0f, 1.0f, 0.0f),		color,	vec2(0.0f, 0.0f)},
+		{	vec3(0.5f,-0.5f, 0.5f),		vec3(0.0f, 1.0f, 0.0f),		color,	vec2(1.0f, 0.0f)},
 
-		{	vec3(0.5f, 0.5f, 0.5f),  vec3(0.5f, 0.5f, 0.5f),	color,vec2(1.0f, 1.0f)},
-		{	vec3(-0.5f, 0.5f, 0.5f), vec3(-0.5f, 0.5f, 0.5f),	color,vec2(0.0f, 1.0f)},
-		{	vec3(0.5f,-0.5f, 0.5f),  vec3(0.5f,-0.5f, 0.5f),	color,vec2(1.0f, 0.0f)},
+		{	vec3(0.5f, 0.5f, 0.5f),		vec3(0.0f, 1.0f, 0.0f),		color,	vec2(1.0f, 1.0f)},
+		{	vec3(-0.5f, 0.5f, 0.5f),	vec3(0.0f, 1.0f, 0.0f),		color,	vec2(0.0f, 1.0f)},
+		{	vec3(0.5f,-0.5f, 0.5f),		vec3(0.0f, 1.0f, 0.0f),		color,	vec2(1.0f, 0.0f)},
 
-		{	vec3(0.5f, 0.5f, 0.5f), vec3(0.5f, 0.5f, 0.5f),		color,vec2(1.0f, 1.0f)}, // right - purple
-		{	vec3(0.5f,-0.5f,-0.5f), vec3(0.5f,-0.5f,-0.5f),		color,vec2(0.0f, 0.0f)},
-		{	vec3(0.5f, 0.5f,-0.5f), vec3(0.5f, 0.5f,-0.5f),		color,vec2(1.0f, 0.0f)},
+		{	vec3(0.5f, 0.5f, 0.5f),		vec3(1.0f, 0.0f, 1.0f),		color,	vec2(1.0f, 1.0f)}, // right - purple
+		{	vec3(0.5f,-0.5f,-0.5f),		vec3(1.0f, 0.0f, 1.0f),		color,	vec2(0.0f, 0.0f)},
+		{	vec3(0.5f, 0.5f,-0.5f),		vec3(1.0f, 0.0f, 1.0f),		color,	vec2(1.0f, 0.0f)},
 
-		{	vec3(0.5f,-0.5f,-0.5f), vec3(0.5f,-0.5f,-0.5f),		color,vec2(0.0f, 0.0f)},
-		{	vec3(0.5f, 0.5f, 0.5f), vec3(0.5f, 0.5f, 0.5f),		color,vec2(1.0f, 1.0f)},
-		{	vec3(0.5f,-0.5f, 0.5f), vec3(0.5f,-0.5f, 0.5f),		color,vec2(0.0f, 1.0f)},
+		{	vec3(0.5f,-0.5f,-0.5f),		vec3(1.0f, 0.0f, 1.0f),		color,	vec2(0.0f, 0.0f)},
+		{	vec3(0.5f, 0.5f, 0.5f),		vec3(1.0f, 0.0f, 1.0f),		color,	vec2(1.0f, 1.0f)},
+		{	vec3(0.5f,-0.5f, 0.5f),		vec3(1.0f, 0.0f, 1.0f),		color,	vec2(0.0f, 1.0f)},
 
-		{	vec3(0.5f, 0.5f, 0.5f),	vec3(0.5f, 0.5f, 0.5f),		color,vec2(1.0f, 1.0f)}, // top - yellow
-		{	vec3(0.5f, 0.5f,-0.5f), vec3(0.5f, 0.5f,-0.5f),		color,vec2(1.0f, 0.0f)},
-		{	vec3(-0.5f, 0.5f,-0.5f),vec3(-0.5f, 0.5f,-0.5f),	color,vec2(0.0f, 0.0f)},
+		{	vec3(0.5f, 0.5f, 0.5f),		vec3(1.0f, 1.0f, 0.0f),		color,	vec2(1.0f, 1.0f)}, // top - yellow
+		{	vec3(0.5f, 0.5f,-0.5f),		vec3(1.0f, 1.0f, 0.0f),		color,	vec2(1.0f, 0.0f)},
+		{	vec3(-0.5f, 0.5f,-0.5f),	vec3(1.0f, 1.0f, 0.0f),		color,	vec2(0.0f, 0.0f)},
 
-		{	vec3(0.5f, 0.5f, 0.5f),	 vec3(0.5f, 0.5f, 0.5f), color, vec2(1.0f, 1.0f)},
-		{	vec3(-0.5f, 0.5f,-0.5f), vec3(-0.5f, 0.5f,-0.5f), color,vec2(0.0f, 0.0f)},
-		{	vec3(-0.5f, 0.5f, 0.5f),	vec3(-0.5f, 0.5f, 0.5f), color,vec2(0.0f, 1.0f)}
+		{	vec3(0.5f, 0.5f, 0.5f),		vec3(1.0f, 1.0f, 0.0f),		color,	vec2(1.0f, 1.0f)},
+		{	vec3(-0.5f, 0.5f,-0.5f),	vec3(1.0f, 1.0f, 0.0f),		color,	vec2(0.0f, 0.0f)},
+		{	vec3(-0.5f, 0.5f, 0.5f),	vec3(1.0f, 1.0f, 0.0f),		color,	vec2(0.0f, 1.0f)}
 	};
 	numOfVertices = sizeof(vertexArray) / sizeof(Vertex);
 		glGenVertexArrays(1, &cubeVAO);
@@ -88,7 +93,7 @@ Cube2::Cube2(glm::vec3 color, glm::mat4 change, int shaderProgram)
 			sizeof(Vertex),
 			(void*)(2 * sizeof(vec3))   // Normal is Offseted by vec3 (see class Vertex)
 		);
-		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
 
 
 		//2nd attribute buffer : vertex normal
@@ -99,15 +104,36 @@ Cube2::Cube2(glm::vec3 color, glm::mat4 change, int shaderProgram)
 			sizeof(Vertex),
 			(void*)sizeof(vec3)// Color is Offseted by 2 vec3 (see class Vertex)
 		);
-		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(1);
+
+		// 4thd attribute buffer : texture 
+		glVertexAttribPointer(3,
+			2,
+			GL_FLOAT,
+			GL_FALSE,
+			sizeof(Vertex),
+			(void*)(3 * sizeof(vec3))
+		);
+		glEnableVertexAttribArray(3);
+
+		if (texture != NULL) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texture);
+
+		}
 
 	}
 
-void Cube2::Draw()
+void Cube2::Draw(GLuint texture)
 {
 	glBindVertexArray(cubeVAO);
-	mat4 temp = world * centerSource * changes;
+	mat4 temp = world * centerSource * animationMatrix * changes;
 	glUniformMatrix4fv(mWorldMatrixLocation, 1, GL_FALSE, &temp[0][0]);
+	if (texture != NULL) {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+
+	}
 	glDrawArrays(GL_TRIANGLES, 0, numOfVertices);
 	glBindVertexArray(0);
 }
@@ -162,5 +188,103 @@ void Cube2::TranslateParent(glm::vec3 movement) {
 void Cube2::Nuke(glm::mat4 updated)
 {
 	centerSource = updated;
+}
+
+void Cube2::Animate(float dt, bool reverse) {
+	if (animateType == 1)
+	{
+		if (reverse)
+			frame = frame - dt * 200;
+		else
+			frame = frame + dt * 200;
+
+		if (frame > 360)
+		{
+			frame = frame - 360;
+		}
+		if (frame < 0)
+		{
+			frame = frame + 360;
+		}
+
+		float i = sin(radians(frame)) / 5;
+		float f;
+		if (frame >= 270 || frame <= 90)
+			f = abs(sin(radians((frame + 90)))) / 10;
+		else
+			f = 0;
+		animationMatrix = translate(glm::mat4(1.0f), vec3(0.0f, f, i));
+	}
+	else if (animateType == 2)
+	{
+		if (reverse)
+			frame = frame - dt * 200;
+		else
+			frame = frame + dt * 200;
+
+		if (frame > 360)
+		{
+			frame = frame - 360;
+		}
+		if (frame < 0)
+		{
+			frame = frame + 360;
+		}
+
+
+		float i = sin(radians(frame + 180)) / 5;
+		float f;
+		if (frame <= 270 && frame >= 90)
+			f = abs(sin(radians((frame + 90)))) / 10;
+		else
+			f = 0;
+
+
+		animationMatrix = translate(glm::mat4(1.0f), vec3(0.0f, f, i));
+	}
+	else if (animateType == 3)
+	{
+		if (reverse) {
+			frame = frame - dt * 200;
+		}
+		else {
+			frame = frame + dt * 200;
+		}
+		if (frame > 360)
+		{
+			frame = frame - 360;
+		}
+		if (frame < 0) {
+			frame += 360;
+		}
+
+		float i = -1 * sin(radians(frame))*40;
+
+		animationMatrix = rotate(glm::mat4(1.0f), radians(i),vec3(0.0f, 1.0f, 0.0f));
+	}
+	else if (animateType == 4)
+	{
+		if (reverse) {
+			frame = frame - dt * 200;
+		}
+		else {
+			frame = frame + dt * 200;
+		}
+		if (frame > 360)
+		{
+			frame = frame - 360;
+		}
+		if (frame < 0) {
+			frame += 360;
+		}
+
+		float i = sin(radians(frame+180)) * 40;
+
+		animationMatrix = rotate(glm::mat4(1.0f), radians(i), vec3(0.0f, 1.0f, 0.0f));
+	}
+	else {
+		animationMatrix = mat4(1.0f);
+	}
+
 }
 

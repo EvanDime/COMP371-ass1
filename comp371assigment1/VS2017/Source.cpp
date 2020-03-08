@@ -18,6 +18,8 @@
 #include <../../VS2017/grid.h>
 #include <../../VS2017/olaf.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <../../VS2017/stb_image.h>
 
 
 
@@ -56,6 +58,46 @@ std::string getFragmentShaderSource(char* source)
 	return readFile(source);
 }
 
+
+GLuint loadTexture(const char* filename)
+{
+	// Step1 Create and bind textures
+	GLuint textureId = 0;
+	glGenTextures(1, &textureId);
+	assert(textureId != 0);
+
+
+	glBindTexture(GL_TEXTURE_2D, textureId);
+
+	// Step2 Set filter parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// Step3 Load Textures with dimension data
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, 0);
+	if (!data)
+	{
+		std::cerr << "Error::Texture could not load texture file:" << filename << std::endl;
+		return 0;
+	}
+
+	// Step4 Upload the texture to the PU
+	GLenum format = 0;
+	if (nrChannels == 1)
+		format = GL_RED;
+	else if (nrChannels == 3)
+		format = GL_RGB;
+	else if (nrChannels == 4)
+		format = GL_RGBA;
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height,
+		0, format, GL_UNSIGNED_BYTE, data);
+
+	// Step5 Free resources
+	stbi_image_free(data);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	return textureId;
+}
 
 int compileAndLinkShaders()
 {
@@ -187,8 +229,12 @@ int main(int argc, char* argv[])
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 #endif
 
+	//Textures
+	//GLuint brickTextureID = loadTexture("Textures/brick.jpg");
+	//GLuint cementTextureID = loadTexture("Textures/cement.jpg");
+
 	// Create Window and rendering context using GLFW, resolution is  1024x768
-	GLFWwindow* window = glfwCreateWindow(1024, 768, "Comp371 - Assigment 01 - Evan Dimopoulos", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1024, 768, "Comp371 - Assigment 02 - Evan Dimopoulos", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cerr << "Failed to create GLFW window" << std::endl;
@@ -219,6 +265,7 @@ int main(int argc, char* argv[])
 	// For frame time
 	float lastFrameTime = glfwGetTime();
 	int lastMouseLeftState = GLFW_RELEASE;
+	int lastXstate = GLFW_RELEASE;
 	int lastMouseRightState = GLFW_RELEASE;
 	int lastMouseMiddleState = GLFW_RELEASE;
 
@@ -232,11 +279,14 @@ int main(int argc, char* argv[])
 	GLuint mWorldMatrixLocation = glGetUniformLocation(shaderProgram, "worldMatrix");
 	bool clickCheck = false;
 
+	GLuint snowTextureID = loadTexture("../Assets/snow.jpg");
+
 	// Define and upload geometry to the GPU here ...
 	Cube2 axisX = Cube2(vec3(1.0f, 0.0f, 0.0f), translate(mat4(1.0f), vec3(2.5f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(5.0f, 0.1f, 0.1f)), shaderProgram);
 	Cube2 axisZ = Cube2(vec3(0.0f, 1.0f, 0.0f), translate(mat4(1.0f), vec3(0.0f, 0.0f, 2.5f)) * scale(mat4(1.0f), vec3(0.1f, 0.1f, 5.0f)), shaderProgram);
 	Cube2 axisY = Cube2(vec3(0.0f, 0.0f, 1.0f), translate(mat4(1.0f), vec3(0.0f, 2.5f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f, 5.0f, 0.1f)), shaderProgram);
 	Grid grid = Grid(vec3(1.0f, 1.0f, 0.0f), shaderProgram);
+	Cube2 floor = Cube2(vec3(0.8f, 0.8f, 0.8f), translate(mat4(1.0f), vec3(0.0f, -0.08f, 0.0f)) * scale(mat4(1.0f), vec3(100.0f, 0.01f, 100.0f)), shaderProgram);
 	Olaf olaf = Olaf(shaderProgram);
 	//Other
 	glEnable(GL_CULL_FACE);
@@ -248,9 +298,12 @@ int main(int argc, char* argv[])
 		bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS;
 				// frame time calculation
 		float dt = glfwGetTime() - lastFrameTime;
+
 		lastFrameTime += dt;
-
-
+		glActiveTexture(GL_TEXTURE0);
+		GLuint textureLocation = glGetUniformLocation(shaderProgram, "textureSampler");
+		glBindTexture(GL_TEXTURE_2D, snowTextureID);
+		glUniform1i(textureLocation, 0);
 		// Each frame, reset color of each pixel to glClearColor
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -258,7 +311,8 @@ int main(int argc, char* argv[])
 		axisX.Draw();
 		axisY.Draw();
 		axisZ.Draw();
-		grid.Draw();
+		//grid.Draw();
+		floor.Draw();
 		olaf.Draw();
 		//////
 
@@ -271,7 +325,8 @@ int main(int argc, char* argv[])
 		//SHIFT + S
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && shift) // move camera to the left
 		{
-			olaf.Translate(vec3(0.0, 0.0, -0.01));
+			olaf.Animate(dt, true);
+			olaf.Translate(vec3(0.0, 0.0, -0.001));
 		}
 		//SHIFT + D
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && shift) 
@@ -281,7 +336,8 @@ int main(int argc, char* argv[])
 		//SHIFT + W
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && shift) 
 		{
-			olaf.Translate(vec3(0.0, 0.0, 0.01));
+			olaf.Animate(dt, false);
+			olaf.Translate(vec3(0.0, 0.0, 0.001));
 		}
 		//A
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && !shift) 
@@ -318,6 +374,22 @@ int main(int argc, char* argv[])
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	
 		}
+
+		//X
+		if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && lastXstate == GLFW_RELEASE && shift)
+		{
+			olaf.Animate(dt*10, false);
+			olaf.Translate(vec3(0.0, 0.0, 0.01));
+		}
+
+		//SHIFT + X
+		if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && lastXstate == GLFW_RELEASE && !shift)
+		{
+			olaf.Animate(dt*10, true);
+			olaf.Translate(vec3(0.0, 0.0, -0.01));
+		}
+
+		lastXstate = glfwGetKey(window, GLFW_KEY_X);
 
 		//SPACE
 		//I know the function can be called relocate or something, but i decided on Nuke

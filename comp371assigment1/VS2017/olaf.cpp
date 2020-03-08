@@ -8,47 +8,48 @@ Olaf::Olaf(int shaderProgram)
 	: changes(translate(mat4(1.0f), vec3(2.5f, 1.0f, 2.5f)) * glm::scale(mat4(1.0), vec3(2.0f, 2.0f, 2.0f))), 
 	//i don't like this, but it won't let me not have it
 	head(Sphere(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	mask(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	scarf(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	scarf2(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
+	mask(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	scarf(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	scarf2(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
 	chest(Sphere(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	eyeL(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	eyeR(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	nose(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	armR(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	armL(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	footL(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	footR(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	button1(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	button3(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	button2(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	hat(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	hat2(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
-	shoe1(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(0.3f, -0.6f, 0.0f)), shaderProgram)),
-	shoe2(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(0.3f, -0.6f, 0.0f)), shaderProgram))
+	eyeL(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	eyeR(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	nose(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	armR(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	armL(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	footL(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	footR(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 2)),
+	button1(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	button3(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	button2(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	hat(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	hat2(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
+	shoe1(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(0.3f, -0.6f, 0.0f)), shaderProgram, NULL, 0)),
+	shoe2(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(0.3f, -0.6f, 0.0f)), shaderProgram, NULL, 0))
 
 {
 	chest = Sphere(vec3(1.0f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.0f, 0.8f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.4f, 0.4f, 0.4f)), shaderProgram);
-	mask = Cube2(vec3(0.0f, 1.0f, 0.5f), glm::translate(mat4(1.0f), vec3(0.0f, 1.35f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.55f, 0.1f, 0.55f)), shaderProgram);
-	scarf = Cube2(vec3(0.5f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.0f, 1.105f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.9f, 0.1f, 0.9f)), shaderProgram);
-	scarf2 = Cube2(vec3(0.5f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.45f, 0.84f, 0.35f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.65f, 0.1f)), shaderProgram);
+	mask = Cube2(vec3(0.0f, 1.0f, 0.5f), glm::translate(mat4(1.0f), vec3(0.0f, 1.35f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.55f, 0.1f, 0.55f)), shaderProgram, NULL, 0);
+	scarf = Cube2(vec3(0.5f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.0f, 1.105f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.9f, 0.1f, 0.9f)), shaderProgram, NULL, 0);
+	scarf2 = Cube2(vec3(0.5f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.45f, 0.84f, 0.35f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.65f, 0.1f)), shaderProgram, NULL, 0);
 	head = Sphere(vec3(1.0f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.0f, 1.3f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.2f, 0.2f, 0.2f)), shaderProgram);
-	footL= Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(-0.3f, -0.6f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.25f, 0.25f, 0.25f)), shaderProgram);
-	footR = Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(0.3f, -0.6f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.25f, 0.25f, 0.25f)), shaderProgram);
-	shoe1 = Cube2(vec3(1.0f, 0.0f, 0.0f), translate(mat4(1.0f), vec3(0.3f, -0.655f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.3f, 0.15f, 0.3f)), shaderProgram);
-	shoe2 = Cube2(vec3(1.0f, 0.0f, 0.0f), translate(mat4(1.0f), vec3(-0.3f, -0.655f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.3f, 0.15f, 0.3f)), shaderProgram);
-	eyeR = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(0.1f, 1.35f, 0.27f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram);
-	eyeL = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(-0.1f, 1.35f, 0.27f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram);
-	hat = Cube2(vec3(0.1f, 0.1f, 0.1f), glm::translate(mat4(1.0f), vec3(0.0f, 1.8f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.25f, 0.50f, 0.25f)), shaderProgram);
-	hat2 = Cube2(vec3(0.1f, 0.1f, 0.1f), glm::translate(mat4(1.0f), vec3(0.0f, 1.5f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.75f, 0.15f, 0.75f)), shaderProgram);
-	nose = Cube2(vec3(1.8f, .7f, 0.0f), translate(mat4(1.0f), vec3(0.0f, 1.23f, 0.35f)) * glm::scale(mat4(1.0), vec3(0.05f, 0.05f, 0.25f)), shaderProgram);
-	armR = Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(-0.6f, 0.8f, 0.0f)) * glm::scale(mat4(1.0), vec3(1.0f, 0.25f, 0.25f)), shaderProgram);
-	armL = Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(0.6f, 0.8f, 0.0f)) * glm::scale(mat4(1.0), vec3(1.0f, 0.25f, 0.25f)), shaderProgram);
-	button1 = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(0.0f, 0.35f, 0.55f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram);
-	button2 = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(0.0f, 0.70f, 0.425f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram);
-	button3 = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(0.0f, 1.0f, 0.425f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram);
+	footL= Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(-0.3f, -0.6f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.25f, 0.25f, 0.25f)), shaderProgram, NULL, 1);
+	footR = Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(0.3f, -0.6f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.25f, 0.25f, 0.25f)), shaderProgram, NULL, 2);
+	shoe1 = Cube2(vec3(1.0f, 0.0f, 0.0f), translate(mat4(1.0f), vec3(0.3f, -0.655f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.3f, 0.15f, 0.3f)), shaderProgram, NULL, 2);
+	shoe2 = Cube2(vec3(1.0f, 0.0f, 0.0f), translate(mat4(1.0f), vec3(-0.3f, -0.655f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.3f, 0.15f, 0.3f)), shaderProgram, NULL, 1);
+	eyeR = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(0.1f, 1.35f, 0.27f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram, NULL, 0);
+	eyeL = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(-0.1f, 1.35f, 0.27f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram, NULL, 0);
+	hat = Cube2(vec3(0.1f, 0.1f, 0.1f), glm::translate(mat4(1.0f), vec3(0.0f, 1.8f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.25f, 0.50f, 0.25f)), shaderProgram, NULL, 0);
+	hat2 = Cube2(vec3(0.1f, 0.1f, 0.1f), glm::translate(mat4(1.0f), vec3(0.0f, 1.5f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.75f, 0.15f, 0.75f)), shaderProgram, NULL, 0);
+	nose = Cube2(vec3(1.8f, .7f, 0.0f), translate(mat4(1.0f), vec3(0.0f, 1.23f, 0.35f)) * glm::scale(mat4(1.0), vec3(0.05f, 0.05f, 0.25f)), shaderProgram, NULL, 0);
+	armR = Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(-0.5f, 0.7f, 0.0f)) * rotate(mat4(1.0f), radians(45.0f), vec3(0.0f, 0.0f, 1.0f)) * glm::scale(mat4(1.0), vec3(0.6f, 0.25f, 0.25f)), shaderProgram, NULL, 3);
+	armL = Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(0.5f, 0.7f, 0.0f)) * rotate(mat4(1.0f), radians(-45.0f), vec3(0.0f, 0.0f, 1.0f)) * glm::scale(mat4(1.0), vec3(0.6f, 0.25f, 0.25f)), shaderProgram, NULL, 4);
+	button1 = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(0.0f, 0.35f, 0.55f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram, NULL, 0);
+	button2 = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(0.0f, 0.70f, 0.425f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram, NULL, 0);
+	button3 = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(0.0f, 1.0f, 0.425f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram, NULL, 0);
 
-	changes = mat4(1.0) * glm::translate(mat4(1.0f), vec3(0.0f, -0.05f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.6f, 0.6f, 0.6f));
+ 	changes = mat4(1.0);
+	original = glm::translate(mat4(1.0f), vec3(0.0f, -0.05f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.6f, 0.6f, 0.6f));
 	world = mat4(1.0);
 
 	Olaf::Update(translate(mat4(1.0f), vec3(0.0f, 0.745f, 0.0f)));
@@ -1363,9 +1364,9 @@ Olaf::Olaf(int shaderProgram)
 
 }
 
-void Olaf::Draw()
+void Olaf::Draw(GLuint snow, GLuint carrot)
 {
-	mat4 temp = world * changes;
+	mat4 temp = world * changes * original;
 	glBindVertexArray(olafVAO);
 	glUniformMatrix4fv(mWorldMatrixLocation, 1, GL_FALSE, &temp[0][0]);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
@@ -1375,21 +1376,60 @@ void Olaf::Draw()
 	//scarf2.Draw();
 	//mask.Draw();
 	head.Draw();
-	footL.Draw();
-	footR.Draw();
+	//if (animate)
+	//{
+	//	footL.Draw(NULL, dt, reverse);
+	//	footR.Draw(NULL, dt, reverse);
+	//	shoe1.Draw(NULL, dt, reverse);
+	//	shoe2.Draw(NULL, dt, reverse);
+	//}
+	//else {
+		footL.Draw();
+		footR.Draw();
+		shoe1.Draw();
+		shoe2.Draw();
+	//}
+
 	eyeR.Draw();
 	eyeL.Draw();
 	hat.Draw();
 	hat2.Draw();
 	nose.Draw();
-	shoe1.Draw();
-	shoe2.Draw();
 	armR.Draw();
 	armL.Draw();
 	button1.Draw();
 	button2.Draw();
 	button3.Draw();
 }
+
+//
+//void Olaf::Draw()
+//{
+//	mat4 temp = world * changes * original;
+//	glBindVertexArray(olafVAO);
+//	glUniformMatrix4fv(mWorldMatrixLocation, 1, GL_FALSE, &temp[0][0]);
+//	glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
+//	glBindVertexArray(0);
+//	chest.Draw();
+//	//scarf.Draw();
+//	//scarf2.Draw();
+//	//mask.Draw();
+//	head.Draw();
+//	footL.Draw();
+//	footR.Draw();
+//	eyeR.Draw();
+//	eyeL.Draw();
+//	hat.Draw();
+//	hat2.Draw();
+//	nose.Draw();
+//	shoe1.Draw();
+//	shoe2.Draw();
+//	armR.Draw();
+//	armL.Draw();
+//	button1.Draw();
+//	button2.Draw();
+//	button3.Draw();
+//}
 
 void Olaf::Update(glm::mat4 newStuff)
 {
@@ -1535,6 +1575,15 @@ void Olaf::ResetWorld()
 	button1.ResetWorld();
 	button2.ResetWorld();
 	button3.ResetWorld();
+}
+
+void Olaf::Animate(float dt, bool reverse) {
+	footL.Animate(dt, reverse);
+	footR.Animate(dt, reverse);
+	shoe1.Animate(dt, reverse);
+	shoe2.Animate(dt, reverse);
+	armL.Animate(dt, reverse);
+	armR.Animate(dt, reverse);
 }
 
 void Olaf::UpdateWorld(glm::mat4 stuffandthings)

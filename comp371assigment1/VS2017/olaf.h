@@ -18,7 +18,7 @@ class Olaf
 {
 public:
 	Olaf(int);
-	void Draw();
+	void Draw(GLuint = NULL, GLuint = NULL);
 	void Update(glm::mat4);
 	GLuint  olafVAO;
 	void Rotate(float, glm::vec3);
@@ -27,11 +27,13 @@ public:
 	void Nuke();
 	void UpdateWorld(glm::mat4);
 	void ResetWorld();
+	void Animate(float, bool = false);
 	Cube2 armL;
 	Cube2 armR;
 private:
 	GLuint mWorldMatrixLocation;
 	glm::mat4 changes;
+	glm::mat4 original;
 	glm::mat4 world;
 	Sphere head;
 	Cube2 scarf;
