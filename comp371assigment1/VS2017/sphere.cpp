@@ -1322,11 +1322,15 @@ Sphere::Sphere(glm::vec3 color, glm::mat4 change, int shaderProgram)
 
 void Sphere::Draw()
 {
+	glCullFace(GL_FRONT);
+
 	glBindVertexArray(sphereVAO);
 	mat4 temp = world * centerSource * changes;
 	glUniformMatrix4fv(mWorldMatrixLocation, 1, GL_FALSE, &temp[0][0]);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 	glBindVertexArray(0);
+	glCullFace(GL_BACK);
+
 }
 
 void Sphere::Update(glm::mat4 newStuff)

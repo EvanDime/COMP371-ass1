@@ -17,6 +17,7 @@
 #include <../../VS2017/camera.h>
 #include <../../VS2017/grid.h>
 #include <../../VS2017/olaf.h>
+#include <../../VS2017/Shader.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <../../VS2017/stb_image.h>
@@ -250,6 +251,14 @@ int main(int argc, char* argv[])
 		glfwTerminate();
 		return -1;
 	}
+	//for animations
+	float time = 0;
+	float winkTime = 0;
+	bool walking = false;
+	bool winking = false;
+	bool blinking = false;
+	bool direction = false;
+	bool eye = false;
 
 	// putple-ish background
 	glClearColor(0.1f, 0.0f, 0.2f, 1.0f);
@@ -278,7 +287,7 @@ int main(int argc, char* argv[])
 	glEnable(GL_DEPTH_TEST);
 	GLuint mWorldMatrixLocation = glGetUniformLocation(shaderProgram, "worldMatrix");
 	bool clickCheck = false;
-
+	bool swapFloor = false;
 	GLuint snowTextureID = loadTexture("../Assets/snow.jpg");
 
 	// Define and upload geometry to the GPU here ...
@@ -287,12 +296,15 @@ int main(int argc, char* argv[])
 	Cube2 axisY = Cube2(vec3(0.0f, 0.0f, 1.0f), translate(mat4(1.0f), vec3(0.0f, 2.5f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f, 5.0f, 0.1f)), shaderProgram);
 	Grid grid = Grid(vec3(1.0f, 1.0f, 0.0f), shaderProgram);
 	Cube2 floor = Cube2(vec3(0.8f, 0.8f, 0.8f), translate(mat4(1.0f), vec3(0.0f, -0.08f, 0.0f)) * scale(mat4(1.0f), vec3(100.0f, 0.01f, 100.0f)), shaderProgram);
-	Olaf olaf = Olaf(shaderProgram);
+	Olaf olaf = Olaf(shaderProgram,shaderProgram);
 	//Other
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
 	// Entering Main Loop
-	while (!glfwWindowShouldClose(window))
+	glActiveTexture(GL_TEXTURE0);
+	GLuint textureLocation = glGetUniformLocation(shaderProgram, "textureSampler");
+	glBindTexture(GL_TEXTURE_2D, snowTextureID);
+	glUniform1i(textureLocation, 0);
+ 	while (!glfwWindowShouldClose(window))
 	{
 
 		bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS;
@@ -300,10 +312,7 @@ int main(int argc, char* argv[])
 		float dt = glfwGetTime() - lastFrameTime;
 
 		lastFrameTime += dt;
-		glActiveTexture(GL_TEXTURE0);
-		GLuint textureLocation = glGetUniformLocation(shaderProgram, "textureSampler");
-		glBindTexture(GL_TEXTURE_2D, snowTextureID);
-		glUniform1i(textureLocation, 0);
+
 		// Each frame, reset color of each pixel to glClearColor
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -311,8 +320,10 @@ int main(int argc, char* argv[])
 		axisX.Draw();
 		axisY.Draw();
 		axisZ.Draw();
-		//grid.Draw();
-		floor.Draw();
+		if(swapFloor)
+			grid.Draw();
+		else 
+			floor.Draw();
 		olaf.Draw();
 		//////
 
@@ -325,8 +336,17 @@ int main(int argc, char* argv[])
 		//SHIFT + S
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && shift) // move camera to the left
 		{
-			olaf.Animate(dt, true);
+			olaf.AnimateWalk(dt, true);
 			olaf.Translate(vec3(0.0, 0.0, -0.001));
+			if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+			{
+				olaf.Rotate(radians(0.05f), vec3(0.0f, 1.0f, 0.0f));
+
+			}
+			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+			{
+				olaf.Rotate(radians(-0.05f), vec3(0.0f, 1.0f, 0.0f));
+			}
 		}
 		//SHIFT + D
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && shift) 
@@ -336,8 +356,17 @@ int main(int argc, char* argv[])
 		//SHIFT + W
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && shift) 
 		{
-			olaf.Animate(dt, false);
+			olaf.AnimateWalk(dt, false);
 			olaf.Translate(vec3(0.0, 0.0, 0.001));
+			if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+			{
+				olaf.Rotate(radians(0.05f), vec3(0.0f, 1.0f, 0.0f));
+
+			}
+			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+			{
+				olaf.Rotate(radians(-0.05f), vec3(0.0f, 1.0f, 0.0f));
+			}
 		}
 		//A
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && !shift) 
@@ -374,22 +403,80 @@ int main(int argc, char* argv[])
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	
 		}
-
-		//X
-		if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && lastXstate == GLFW_RELEASE && shift)
-		{
-			olaf.Animate(dt*10, false);
-			olaf.Translate(vec3(0.0, 0.0, 0.01));
+		
+		if (lastXstate == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
+			swapFloor = !swapFloor;
 		}
-
-		//SHIFT + X
-		if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && lastXstate == GLFW_RELEASE && !shift)
-		{
-			olaf.Animate(dt*10, true);
-			olaf.Translate(vec3(0.0, 0.0, -0.01));
-		}
-
 		lastXstate = glfwGetKey(window, GLFW_KEY_X);
+
+
+		if (walking) {
+			olaf.AnimateWalk(dt , direction);
+			time = time + dt * 400;
+			if(direction)
+				olaf.Translate(vec3(0.0, 0.0, -0.001));
+			else
+				olaf.Translate(vec3(0.0, 0.0, 0.001));
+
+			if (time > 360)
+				walking = false;
+		}
+
+		if (winking) {
+			olaf.AnimateWink(dt, eye);
+			winkTime = winkTime + dt * 400;
+			if (winkTime > 180)
+				winking = false;
+		}
+
+		if (blinking)
+		{
+			olaf.AnimateBlink(dt);
+			winkTime = winkTime + dt * 400;
+			if (winkTime > 180)
+				blinking = false;
+		}
+		//C
+		if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && shift && !winking && !blinking)
+		{
+			//olaf.eyeL.Scale(vec3(1.00f, 1.01f, 1.00f));
+			winking = true;
+			eye = true;
+			winkTime = 0;
+		}
+
+		//SHIFT + C
+		if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && !shift && !winking && !blinking)
+		{
+			winking = true;
+			eye = false;
+			winkTime = 0;
+		}
+
+		//B
+		if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS && !shift && !blinking && !winking)
+		{
+			blinking = true;
+			winkTime = 0;
+		}
+
+		//Z
+		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS && shift && !walking)
+		{
+
+			walking = true;
+			direction = true;
+			time = 0;
+		}
+
+		//SHIFT + Z
+		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS  && !shift && !walking)
+		{
+
+			walking = true;
+			direction = false;
+			time = 0;
+		}
 
 		//SPACE
 		//I know the function can be called relocate or something, but i decided on Nuke
@@ -415,6 +502,8 @@ int main(int argc, char* argv[])
 			axisX.UpdateWorld(rotate(mat4(1.0f), radians(0.01f), vec3(1.0f, 0.0f, 0.0f)));
 			axisY.UpdateWorld(rotate(mat4(1.0f), radians(0.01f), vec3(1.0f, 0.0f, 0.0f)));
 			axisZ.UpdateWorld(rotate(mat4(1.0f), radians(0.01f), vec3(1.0f, 0.0f, 0.0f)));
+			floor.UpdateWorld(rotate(mat4(1.0f), radians(0.01f), vec3(1.0f, 0.0f, 0.0f)));
+
 		}
 		//up arrrow
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !shift)
@@ -424,6 +513,7 @@ int main(int argc, char* argv[])
 			axisX.UpdateWorld(rotate(mat4(1.0f), radians(0.01f), vec3(0.0f, 1.0f, 0.0f)));
 			axisY.UpdateWorld(rotate(mat4(1.0f), radians(0.01f), vec3(0.0f, 1.0f, 0.0f)));
 			axisZ.UpdateWorld(rotate(mat4(1.0f), radians(0.01f), vec3(0.0f, 1.0f, 0.0f)));
+			floor.UpdateWorld(rotate(mat4(1.0f), radians(0.01f), vec3(0.0f, 1.0f, 0.0f)));
 		}
 		//down arrrow
 		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !shift)
@@ -433,6 +523,7 @@ int main(int argc, char* argv[])
 			axisX.UpdateWorld(rotate(mat4(1.0f), radians(-0.01f), vec3(0.0f, 1.0f, 0.0f)));
 			axisY.UpdateWorld(rotate(mat4(1.0f), radians(-0.01f), vec3(0.0f, 1.0f, 0.0f)));
 			axisZ.UpdateWorld(rotate(mat4(1.0f), radians(-0.01f), vec3(0.0f, 1.0f, 0.0f)));
+			floor.UpdateWorld(rotate(mat4(1.0f), radians(-0.01f), vec3(0.0f, 1.0f, 0.0f)));
 		}
 		//right arrrow
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && !shift)
@@ -442,6 +533,7 @@ int main(int argc, char* argv[])
 			axisX.UpdateWorld(rotate(mat4(1.0f), radians(-0.01f), vec3(1.0f, 0.0f, 0.0f)));
 			axisY.UpdateWorld(rotate(mat4(1.0f), radians(-0.01f), vec3(1.0f, 0.0f, 0.0f)));
 			axisZ.UpdateWorld(rotate(mat4(1.0f), radians(-0.01f), vec3(1.0f, 0.0f, 0.0f)));
+			floor.UpdateWorld(rotate(mat4(1.0f), radians(-0.01f), vec3(1.0f, 0.0f, 0.0f)));
 		}
 		//SHIFT + backspace , my laptop does not have a home button so i used shift backspace)
 		if ((glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS && shift) || (glfwGetKey(window, GLFW_KEY_HOME) == GLFW_PRESS))

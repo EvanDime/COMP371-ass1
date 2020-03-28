@@ -4,14 +4,14 @@
 using namespace glm;
 using namespace std;
 
-Olaf::Olaf(int shaderProgram)
+Olaf::Olaf(int shaderProgram, int shaderProgram2)
 	: changes(translate(mat4(1.0f), vec3(2.5f, 1.0f, 2.5f)) * glm::scale(mat4(1.0), vec3(2.0f, 2.0f, 2.0f))), 
 	//i don't like this, but it won't let me not have it
-	head(Sphere(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
+	head(Sphere(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram2)),
 	mask(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
 	scarf(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
 	scarf2(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
-	chest(Sphere(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram)),
+	chest(Sphere(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram2)),
 	eyeL(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
 	eyeR(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
 	nose(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(changes, vec3(0.0f, 3.0f, 0.0f)), shaderProgram, NULL, 0)),
@@ -28,17 +28,17 @@ Olaf::Olaf(int shaderProgram)
 	shoe2(Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(0.3f, -0.6f, 0.0f)), shaderProgram, NULL, 0))
 
 {
-	chest = Sphere(vec3(1.0f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.0f, 0.8f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.4f, 0.4f, 0.4f)), shaderProgram);
+	chest = Sphere(vec3(1.0f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.0f, 0.8f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.4f, 0.4f, 0.4f)), shaderProgram2);
 	mask = Cube2(vec3(0.0f, 1.0f, 0.5f), glm::translate(mat4(1.0f), vec3(0.0f, 1.35f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.55f, 0.1f, 0.55f)), shaderProgram, NULL, 0);
 	scarf = Cube2(vec3(0.5f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.0f, 1.105f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.9f, 0.1f, 0.9f)), shaderProgram, NULL, 0);
 	scarf2 = Cube2(vec3(0.5f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.45f, 0.84f, 0.35f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.65f, 0.1f)), shaderProgram, NULL, 0);
-	head = Sphere(vec3(1.0f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.0f, 1.3f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.2f, 0.2f, 0.2f)), shaderProgram);
+	head = Sphere(vec3(1.0f, 1.0f, 1.0f), glm::translate(mat4(1.0f), vec3(0.0f, 1.3f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.2f, 0.2f, 0.2f)), shaderProgram2);
 	footL= Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(-0.3f, -0.6f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.25f, 0.25f, 0.25f)), shaderProgram, NULL, 1);
 	footR = Cube2(vec3(1.0f, 1.0f, 1.0f), translate(mat4(1.0f), vec3(0.3f, -0.6f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.25f, 0.25f, 0.25f)), shaderProgram, NULL, 2);
 	shoe1 = Cube2(vec3(1.0f, 0.0f, 0.0f), translate(mat4(1.0f), vec3(0.3f, -0.655f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.3f, 0.15f, 0.3f)), shaderProgram, NULL, 2);
 	shoe2 = Cube2(vec3(1.0f, 0.0f, 0.0f), translate(mat4(1.0f), vec3(-0.3f, -0.655f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.3f, 0.15f, 0.3f)), shaderProgram, NULL, 1);
-	eyeR = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(0.1f, 1.35f, 0.27f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram, NULL, 0);
-	eyeL = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(-0.1f, 1.35f, 0.27f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram, NULL, 0);
+	eyeR = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(0.1f, 1.35f, 0.27f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram, NULL, 5);
+	eyeL = Cube2(vec3(0.1f, 0.1f, 0.1f), translate(mat4(1.0f), vec3(-0.1f, 1.35f, 0.27f)) * glm::scale(mat4(1.0), vec3(0.1f, 0.1f, 0.1f)), shaderProgram, NULL, 5);
 	hat = Cube2(vec3(0.1f, 0.1f, 0.1f), glm::translate(mat4(1.0f), vec3(0.0f, 1.8f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.25f, 0.50f, 0.25f)), shaderProgram, NULL, 0);
 	hat2 = Cube2(vec3(0.1f, 0.1f, 0.1f), glm::translate(mat4(1.0f), vec3(0.0f, 1.5f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.75f, 0.15f, 0.75f)), shaderProgram, NULL, 0);
 	nose = Cube2(vec3(1.8f, .7f, 0.0f), translate(mat4(1.0f), vec3(0.0f, 1.23f, 0.35f)) * glm::scale(mat4(1.0), vec3(0.05f, 0.05f, 0.25f)), shaderProgram, NULL, 0);
@@ -51,10 +51,11 @@ Olaf::Olaf(int shaderProgram)
  	changes = mat4(1.0);
 	original = glm::translate(mat4(1.0f), vec3(0.0f, -0.05f, 0.0f)) * glm::scale(mat4(1.0), vec3(0.6f, 0.6f, 0.6f));
 	world = mat4(1.0);
+	animating = false;
 
 	Olaf::Update(translate(mat4(1.0f), vec3(0.0f, 0.745f, 0.0f)));
 	glm::vec3 color = vec3(1.0f,1.0f, 1.0f);
-	mWorldMatrixLocation = glGetUniformLocation(shaderProgram, "worldMatrix");
+	mWorldMatrixLocation = glGetUniformLocation(shaderProgram2, "worldMatrix");
 
 	Vertex vertexBuffer[] = {
 		// position,                                    normal,                              color
@@ -1332,7 +1333,7 @@ Olaf::Olaf(int shaderProgram)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBuffer), vertexBuffer, GL_STATIC_DRAW);
 
 	// 1st attribute buffer : vertex Positions
-	glVertexAttribPointer(0,              // attribute. No particular reason for 0, but must match the layout in the shader.
+	glVertexAttribPointer(0,// attribute. No particular reason for 0, but must match the layout in the shader.
 		3,              // size
 		GL_FLOAT,       // type
 		GL_FALSE,       // normalized?
@@ -1367,36 +1368,30 @@ Olaf::Olaf(int shaderProgram)
 void Olaf::Draw(GLuint snow, GLuint carrot)
 {
 	mat4 temp = world * changes * original;
+	glCullFace(GL_FRONT);
+
 	glBindVertexArray(olafVAO);
 	glUniformMatrix4fv(mWorldMatrixLocation, 1, GL_FALSE, &temp[0][0]);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 	glBindVertexArray(0);
+	glCullFace(GL_BACK);
+
 	chest.Draw();
-	//scarf.Draw();
-	//scarf2.Draw();
-	//mask.Draw();
 	head.Draw();
-	//if (animate)
-	//{
-	//	footL.Draw(NULL, dt, reverse);
-	//	footR.Draw(NULL, dt, reverse);
-	//	shoe1.Draw(NULL, dt, reverse);
-	//	shoe2.Draw(NULL, dt, reverse);
-	//}
-	//else {
-		footL.Draw();
-		footR.Draw();
-		shoe1.Draw();
-		shoe2.Draw();
-	//}
+
+	footL.Draw();
+	footR.Draw();
+	shoe1.Draw();
+	shoe2.Draw();
+	armR.Draw();
+	armL.Draw();
 
 	eyeR.Draw();
 	eyeL.Draw();
 	hat.Draw();
 	hat2.Draw();
 	nose.Draw();
-	armR.Draw();
-	armL.Draw();
+	
 	button1.Draw();
 	button2.Draw();
 	button3.Draw();
@@ -1577,7 +1572,7 @@ void Olaf::ResetWorld()
 	button3.ResetWorld();
 }
 
-void Olaf::Animate(float dt, bool reverse) {
+void Olaf::AnimateWalk(float dt, bool reverse) {
 	footL.Animate(dt, reverse);
 	footR.Animate(dt, reverse);
 	shoe1.Animate(dt, reverse);
@@ -1585,6 +1580,23 @@ void Olaf::Animate(float dt, bool reverse) {
 	armL.Animate(dt, reverse);
 	armR.Animate(dt, reverse);
 }
+
+void Olaf::AnimateWink(float dt, bool eye) {
+	if (eye)
+		eyeL.Animate(dt, true);
+	else 
+		eyeR.Animate(dt, true);
+}
+
+void Olaf::AnimateBlink(float dt) {
+	eyeL.Animate(dt, true);
+	eyeR.Animate(dt, true);
+}
+
+bool Olaf::isAnimating() {
+	return !(footL.animating || footR.animating || shoe1.animating || shoe2.animating || armL.animating || armR.animating);
+}
+
 
 void Olaf::UpdateWorld(glm::mat4 stuffandthings)
 {

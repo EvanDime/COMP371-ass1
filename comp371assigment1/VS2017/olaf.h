@@ -17,7 +17,7 @@
 class Olaf
 {
 public:
-	Olaf(int);
+	Olaf(int, int);
 	void Draw(GLuint = NULL, GLuint = NULL);
 	void Update(glm::mat4);
 	GLuint  olafVAO;
@@ -27,9 +27,16 @@ public:
 	void Nuke();
 	void UpdateWorld(glm::mat4);
 	void ResetWorld();
-	void Animate(float, bool = false);
+	void AnimateWalk(float, bool = false);
+	void AnimateWink(float, bool = false);
+	void AnimateBlink(float);
+	bool isAnimating();
+	bool startWalking(bool);
 	Cube2 armL;
 	Cube2 armR;
+	bool animating;
+	Cube2 eyeL;
+	Cube2 eyeR;
 private:
 	GLuint mWorldMatrixLocation;
 	glm::mat4 changes;
@@ -39,8 +46,6 @@ private:
 	Cube2 scarf;
 	Cube2 scarf2;
 	Cube2 mask;
-	Cube2 eyeL;
-	Cube2 eyeR;
 	Cube2 nose;
 	Cube2 shoe1;
 	Cube2 shoe2;

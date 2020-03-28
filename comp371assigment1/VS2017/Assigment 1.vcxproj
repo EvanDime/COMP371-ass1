@@ -127,6 +127,7 @@
     <ClCompile Include="cube2.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="olaf.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="SphereModel.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="cube2.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="olaf.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="SphereModel.h" />
     <ClInclude Include="stb_image.h" />

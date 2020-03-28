@@ -30,11 +30,11 @@ public:
 	void Scale(glm::vec3);
 	void ScaleParent(glm::vec3);
 	GLuint  cubeVAO;
+	bool animating;
 	void Animate(float, bool = false);
 	struct Vertex
 	{
 		glm::vec3 position;
-		glm::vec3 normal;
 		glm::vec3 color;
 		glm::vec2 uv;
 
